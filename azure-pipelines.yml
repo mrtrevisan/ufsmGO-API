@@ -28,5 +28,22 @@ stages:
         tags: |
           latest
           $(tag)
-    
+    - task: ECRPushImage@1
+      displayName: Push ECR latest
+      inputs:
+        awsCredentials: 'aws-connection'
+        regionName: 'us-east-1'
+        imageSource: 'imagename'
+        sourceImageName: 'ufsmgo-api'
+        repositoryName: ufsmgo-api
+        pushTag: latest
 
+    - task: ECRPushImage@1
+      displayName: Push ECR latest
+      inputs:
+        awsCredentials: 'aws-connection'
+        regionName: 'us-east-1'
+        imageSource: 'imagename'
+        sourceImageName: 'ufsmgo-api'
+        repositoryName: ufsmgo-api
+        pushTag: $(tag)
