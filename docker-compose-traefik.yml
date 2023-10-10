@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  ufsmgo:
+    #image: mrtrevisan/ufsmgo:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ufsmgo
+    restart: always
+    env_file: .env
+    environment:
+      HOST_DB: $HOST_DB
+    #ports:
+    #  - "15432:5432"
+    networks:
+      - traefik-proxy
+    labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik-proxy"
+        - "traefik.http.routers.ufsmgo.entrypoints=http"
+        - "traefik.http.routers.ufsmgo.rule=Host(`ufsmgo.cloud.local`)"
+        - "traefik.http.middlewares.ufsmgo-https-redirect.redirectscheme.scheme=https"
+        - "traefik.http.routers.ufsmgo.middlewares=ufsmgo-https-redirect"
+        - "traefik.http.routers.ufsmgo-secure.entrypoints=https"
+        - "traefik.http.routers.ufsmgo-secure.rule=Host(`ufsmgo.cloud.local`)"
+        - "traefik.http.routers.ufsmgo-secure.tls=true"
+        #- "traefik.http.routers.ufsmgo-secure.tls.certresolver=http"
+        - "traefik.http.services.ufsmgo-secure.loadbalancer.server.port=3000"
+
+networks:
+  traefik-proxy:
+    external: true

@@ -1,0 +1,6 @@
+node_modules
+npm-debug.log
+Dockerfile
+docker-compose-traefik.yml
+docker-compose.yml
+.DS_Store

@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  ufsmgo:
+    image: mrtrevisan/ufsmgo:latest
+    container_name: ufsmgo
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - traefik-proxy
+
+networks:
+  traefik-proxy:
+    external: true
