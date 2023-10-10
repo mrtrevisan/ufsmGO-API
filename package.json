@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "fetch": "node fetch.js",
-    "server": "node server.js"
+    "fetch": "node src/fetch.js",
+    "server": "node src/server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
