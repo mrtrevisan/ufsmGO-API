@@ -7,4 +7,3 @@ variables.env
 azure-pipelines.yml
 README.md
 .DS_Store
-sql
