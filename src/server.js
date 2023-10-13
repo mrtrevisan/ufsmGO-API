@@ -30,7 +30,11 @@ async function connect(){
     if(global.connection) return global.connection.connect()
     else {
         const pool = new Pool({
-            connectionString: process.env.PG_URL
+            host: 'silly.db.elephantsql.com',
+            user: 'fdpgvqke',
+            database: 'fdpgvqke',
+            password: 'jEzhdo-wl5KoCAr5wGJVoy3CxLhqkkJT',
+            port: 5432
         });
         global.connection = pool
         return pool.connect()

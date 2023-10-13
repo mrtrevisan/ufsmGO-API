@@ -3,5 +3,8 @@ npm-debug.log
 Dockerfile
 docker-compose-traefik.yml
 docker-compose.yml
+variables.env
+azure-pipelines.yml
+README.md
 .DS_Store
 sql
