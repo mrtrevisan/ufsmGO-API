@@ -47,6 +47,18 @@ app.get('/', async function(req, res){
     res.json('UfsmGO');
 })
 
+app.get('/healthcheck', async function(req, res){
+    var client = await connect();
+    var query = "SELECT NOW() as time";
+    client.query(query, function(err, result){
+        if(err) {
+            return console.error('error running query', err);
+        }
+        client.release();
+        res.status(200).json('ok')
+    })
+})
+
 app.get('/evento/:index', async function(req, res){
     var client = await connect();
     var query = "SELECT * FROM evento";
@@ -120,14 +132,103 @@ app.get('/centro/:index', async function(req, res){
     })
 })
 
-app.get('/healthcheck', async function(req, res){
+app.get('/player', async function(req, res){
     var client = await connect();
-    var query = "SELECT NOW() as time";
+    var query = "SELECT * FROM player";
     client.query(query, function(err, result){
         if(err) {
             return console.error('error running query', err);
         }
         client.release();
-        res.status(200).json('ok')
+        res.send(result.rows);
     })
 })
+
+app.post('/player', async function(req, res){
+    var client = await connect();
+    var {nome, senha} = req.query
+
+    var query1 = "SELECT * FROM player WHERE nome like '" + nome + "'";
+    const { rows } = await client.query(query1);
+
+    if (rows.length > 0) {
+        res.json('Não foi possível criar o usuário: Nome já existe')
+    } else {
+        var query2 = "INSERT INTO player (nome, senha, pontos) VALUES ('" + nome + "', '" + senha + "', 0)";
+        client.query(query2, function(err, result){
+            if(err) {
+                return console.error('error running query', err);
+            }
+            res.json('Post request: new player, nome = ' + nome + ', senha = ' + senha)
+        })
+    }
+    client.release();  
+})
+
+app.delete('/player', async function(req, res){
+    var client = await connect();
+    var {nome, senha} = req.query
+
+    var query1 = "SELECT * FROM player WHERE nome like '" + nome + "'";
+    const { rows } = await client.query(query1);
+
+    if (rows.length > 0) {
+        const player = rows[0];
+        if (senha === player.senha) {
+            var query2 = "DELETE FROM player WHERE nome like '" + nome + "'";
+            client.query(query2, function(err, result){
+                if(err) {
+                    return console.error('error running query', err);
+                }
+                res.json('Delete request: player, nome = ' + nome)
+            })
+        } else {
+            res.json('Não foi possível excluir o jogador: ' + nome + '- senha incorreta');
+        }
+    }
+    client.release();
+})
+
+app.get('/player/:nome', async function(req, res){
+    var client = await connect();
+    var {nome} = req.params
+
+    var query = "SELECT * FROM player WHERE nome like '" + nome + "'";
+    client.query(query, function(err, result){
+        if(err) {
+            return console.error('error running query', err);
+        }
+        client.release();
+        res.send(result.rows);
+    })
+})
+
+app.get('/player/:nome/pontos', async function(req, res){
+    var client = await connect();
+    var {nome} = req.params
+
+    var query = "SELECT pontos FROM player WHERE nome like '" + nome + "'";
+    client.query(query, function(err, result){
+        if(err) {
+            return console.error('error running query', err);
+        }
+        client.release();
+        res.send(result.rows);
+    })
+})
+
+app.put('/player/:nome/pontos', async function (req, res){
+    var client = await connect();
+    var {nome} = req.params
+    var {value} = req.query
+
+    var query = "UPDATE player SET pontos = '" + value + "' WHERE nome like '" + nome + "'";
+    client.query(query, function(err, result){
+        if(err) {
+            return console.error('error running query', err);
+        }
+        client.release();
+        res.json('Put request: player: ' + nome + '-> pontos = ' + value)
+    })
+})
+
