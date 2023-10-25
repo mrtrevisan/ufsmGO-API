@@ -232,3 +232,15 @@ app.put('/player/:nome/pontos', async function (req, res){
     })
 })
 
+app.get('/leaderboard', async function(req, res){
+    var client = await connect();
+
+    var query = "SELECT nome as Jogador, pontos as Pontuação FROM player ORDER BY pontos DESC LIMIT 10";
+    client.query(query, function(err, result){
+        if(err) {
+            return console.error('error running query', err);
+        }
+        client.release();
+        res.json(result.rows)
+    })
+})
