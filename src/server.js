@@ -7,6 +7,17 @@ const app = express();
 const cors = require('cors');
 app.use(cors());
 
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*'); 
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Accept');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+})
+
+app.use(express.json());
+app.use(express.urlencoded({extended : true}));
+
 const {Pool} = require('pg');
 
 function getDateHoje(){
@@ -146,12 +157,13 @@ app.get('/player', async function(req, res){
 
 app.post('/player', async function(req, res){
     var client = await connect();
-    var {nome, senha} = req.query
+    var {nome, senha} = req.body
 
     var query1 = "SELECT * FROM player WHERE nome like '" + nome + "'";
     const { rows } = await client.query(query1);
 
     if (rows.length > 0) {
+        client.release();  
         res.json('Não foi possível criar o usuário: Nome já existe')
     } else {
         var query2 = "INSERT INTO player (nome, senha, pontos) VALUES ('" + nome + "', '" + senha + "', 0)";
@@ -159,15 +171,15 @@ app.post('/player', async function(req, res){
             if(err) {
                 return console.error('error running query', err);
             }
+            client.release();  
             res.json('Post request: new player, nome = ' + nome + ', senha = ' + senha)
         })
     }
-    client.release();  
 })
 
 app.delete('/player', async function(req, res){
     var client = await connect();
-    var {nome, senha} = req.query
+    var {nome, senha} = req.body
 
     var query1 = "SELECT * FROM player WHERE nome like '" + nome + "'";
     const { rows } = await client.query(query1);
@@ -180,34 +192,24 @@ app.delete('/player', async function(req, res){
                 if(err) {
                     return console.error('error running query', err);
                 }
+                client.release();
                 res.json('Delete request: player, nome = ' + nome)
             })
         } else {
-            res.json('Não foi possível excluir o jogador: ' + nome + '- senha incorreta');
+            client.release();
+            res.json('Não foi possível excluir o jogador: ' + nome + ' - senha incorreta');
         }
+    } else {
+        res.json('Jogador não existe');
+        client.release();
     }
-    client.release();
 })
 
 app.get('/player/:nome', async function(req, res){
     var client = await connect();
     var {nome} = req.params
 
-    var query = "SELECT * FROM player WHERE nome like '" + nome + "'";
-    client.query(query, function(err, result){
-        if(err) {
-            return console.error('error running query', err);
-        }
-        client.release();
-        res.send(result.rows);
-    })
-})
-
-app.get('/player/:nome/pontos', async function(req, res){
-    var client = await connect();
-    var {nome} = req.params
-
-    var query = "SELECT pontos FROM player WHERE nome like '" + nome + "'";
+    var query = "SELECT nome, pontos FROM player WHERE nome LIKE '" + nome + "'";
     client.query(query, function(err, result){
         if(err) {
             return console.error('error running query', err);
@@ -220,7 +222,7 @@ app.get('/player/:nome/pontos', async function(req, res){
 app.put('/player/:nome/pontos', async function (req, res){
     var client = await connect();
     var {nome} = req.params
-    var {value} = req.query
+    var {value} = req.body
 
     var query = "UPDATE player SET pontos = '" + value + "' WHERE nome like '" + nome + "'";
     client.query(query, function(err, result){
