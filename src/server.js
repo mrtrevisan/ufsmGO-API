@@ -232,18 +232,17 @@ app.get('/player/:nome', async function(req, res){
 })
 
 
-app.put('/player/:nome/pontos', async function (req, res){
+app.put('/player/pontos', async function (req, res){
     var client = await connect();
-    var {nome} = req.params
-    var {value} = req.body
+    var {nome, pontos} = req.body
 
-    var query = "UPDATE player SET pontos = '" + value + "' WHERE nome like '" + nome + "'";
+    var query = "UPDATE player SET pontos = '" + pontos + "' WHERE nome like '" + nome + "'";
     client.query(query, function(err, result){
         if(err) {
             return console.error('error running query', err);
         }
         client.release();
-        res.json('Put request: player: ' + nome + '-> pontos = ' + value)
+        res.json('Put request: player: ' + nome + '-> pontos = ' + pontos)
     })
 })
 
