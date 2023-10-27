@@ -207,9 +207,21 @@ app.delete('/player', async function(req, res){
 
 app.get('/player/:nome', async function(req, res){
     var client = await connect();
-    var {nome} = req.params
+    var {nome} = req.params;
+    var {query} = req.query;
 
-    var query = "SELECT nome, pontos FROM player WHERE nome LIKE '" + nome + "'";
+    if (query == 'game_info')
+        var query = "SELECT nome, pontos FROM player WHERE nome LIKE '" + nome + "'";
+    else if (query == 'credentials')
+        var query = "SELECT nome, senha FROM player WHERE nome LIKE '" + nome + "'";
+    else if (query == 'verify')
+        var query = "SELECT nome FROM player WHERE nome LIKE '" + nome + "'";
+    else {
+        client.release();
+        res.json('Invalid query for get method');
+        return;
+    }
+
     client.query(query, function(err, result){
         if(err) {
             return console.error('error running query', err);
@@ -218,6 +230,7 @@ app.get('/player/:nome', async function(req, res){
         res.send(result.rows);
     })
 })
+
 
 app.put('/player/:nome/pontos', async function (req, res){
     var client = await connect();
