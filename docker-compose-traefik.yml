@@ -1,12 +1,12 @@
 version: '3'
 
 services:
-  ufsmgo:
-    #image: mrtrevisan/ufsmgo:latest
+  ufsmgo-api:
+    #image: mrtrevisan/ufsmgo-api:latest
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ufsmgo
+    container_name: ufsmgo-api
     restart: always
     env_file: .env
     #environment:
@@ -18,15 +18,15 @@ services:
     labels:
         - "traefik.enable=true"
         - "traefik.docker.network=traefik-proxy"
-        - "traefik.http.routers.ufsmgo.entrypoints=http"
-        - "traefik.http.routers.ufsmgo.rule=Host(`ufsmgo.cloud.local`)"
-        - "traefik.http.middlewares.ufsmgo-https-redirect.redirectscheme.scheme=https"
-        - "traefik.http.routers.ufsmgo.middlewares=ufsmgo-https-redirect"
-        - "traefik.http.routers.ufsmgo-secure.entrypoints=https"
-        - "traefik.http.routers.ufsmgo-secure.rule=Host(`ufsmgo.cloud.local`)"
-        - "traefik.http.routers.ufsmgo-secure.tls=true"
-        #- "traefik.http.routers.ufsmgo-secure.tls.certresolver=http"
-        - "traefik.http.services.ufsmgo-secure.loadbalancer.server.port=3000"
+        - "traefik.http.routers.ufsmgo-api.entrypoints=http"
+        - "traefik.http.routers.ufsmgo-api.rule=Host(`ufsmgo-api.cloud.local`)"
+        - "traefik.http.middlewares.ufsmgo-api-https-redirect.redirectscheme.scheme=https"
+        - "traefik.http.routers.ufsmgo-api.middlewares=ufsmgo-api-https-redirect"
+        - "traefik.http.routers.ufsmgo-api-secure.entrypoints=https"
+        - "traefik.http.routers.ufsmgo-api-secure.rule=Host(`ufsmgo-api.cloud.local`)"
+        - "traefik.http.routers.ufsmgo-api-secure.tls=true"
+        #- "traefik.http.routers.ufsmgo-api-secure.tls.certresolver=http"
+        - "traefik.http.services.ufsmgo-api-secure.loadbalancer.server.port=3000"
 
 networks:
   traefik-proxy:
