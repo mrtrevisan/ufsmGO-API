@@ -10,7 +10,7 @@ export const ensureNameNotUsed = async (req : Request, res : Response, next : Ne
 
     if (rows.length > 0) {
         client.release();  
-        return res.status(401).json('Não foi possível criar o usuário: Nome já existe');
+        return res.status(401).json('Não foi possível criar o usuário: Nome já em uso');
     } else {
         client.release();
         return next();

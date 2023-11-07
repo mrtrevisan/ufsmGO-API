@@ -1,12 +1,13 @@
 import { connect } from '../db/dbConnect.mjs'
 import { ensureUserExists } from '../middlewares/ensureUserExists.ts';
+import { ensureNameNotUsed } from '../middlewares/ensureNameNotUsed.ts';
 
 import { Router } from 'express';
 
 const userController = Router();
 
 //list all users
-userController.get('/player', async (req, res) => {
+userController.get('/player/all', async (req, res) => {
     var client = await connect();
     var query = "SELECT * FROM player";
 
@@ -27,10 +28,10 @@ userController.get('/player', async (req, res) => {
 
 //list user by name
 userController.get('/player/:nome', async (req, res) => {
-    var client = await connect();
-    var {nome} = req.params;
+    const client = await connect();
+    const {nome} = req.params;
 
-    var query = "SELECT nome FROM player WHERE nome LIKE '" + nome + "'";
+    const query = "SELECT nome, pontos FROM player WHERE nome LIKE '" + nome + "'";
 
     client.query(query, function(err, result){
         if(err) {
@@ -48,11 +49,11 @@ userController.get('/player/:nome', async (req, res) => {
 })
 
 //create new user
-userController.post('/player', ensureUserExists, async (req, res) => {
-    var client = await connect();
-    var {nome, senha} = req.body;
+userController.post('/player', ensureNameNotUsed, async (req, res) => {
+    const client = await connect();
+    const {nome, senha} = req.body;
 
-    query = "INSERT INTO player (nome, senha, pontos) VALUES ('" + nome + "', '" + senha + "', 0)";
+    const query = "INSERT INTO player (nome, senha, pontos) VALUES ('" + nome + "', '" + senha + "', 0)";
     client.query(query, (err, result) => {
         if(err) {
             console.error('error running query', err);
@@ -73,22 +74,11 @@ userController.delete('/player', ensureUserExists, async (req, res) => {
     var client = await connect();
     var {nome, senha} = req.body
 
-    client.query(query, (err, result) => {
-        if(err) {
-            console.error('error running query', err);
-            client.release();
-            res.status(500).json({
-                status: 'error',
-                message: 'Internal server error',
-            })
-        } else {
-            const usuario = result.rows[0];
-            client.release();  
-        }
-    })
+    const query = "SELECT * FROM player WHERE nome like '" + nome + "'";
+    const { rows } = await client.query(query);
 
     // verifica se a senha está correta
-    const passwordMatch = await compare(senha, usuario.senha);
+    const passwordMatch = (senha === rows[0].senha);
 
     if (passwordMatch) {
         var query2 = "DELETE FROM player WHERE nome like '" + nome + "'";
