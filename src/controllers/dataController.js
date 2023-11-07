@@ -1,9 +1,28 @@
-import { connect } from '../db/connect'
+import { connect } from '../db/dbConnect'
 import { getDateHoje } from '../utils/getDate';
 
-const {Router} = require('express');
+import { Router } from 'express';
 
 const dataController = Router();
+
+dataController.get('/healthcheck', async (req, res) => {
+    var client = await connect();
+    var query = "SELECT NOW() as time";
+
+    client.query(query, function(err, result){
+        if(err) {
+            console.error('error running healthcheck', err);
+            client.release();
+            res.status(500).json({
+                status: 'error',
+                message: 'Internal server error',
+            });
+        } else {
+            client.release();
+            res.status(200).json('ok')
+        }
+    })
+})
 
 //list all events
 dataController.get('/evento/all', async (req, res) =>{
@@ -17,7 +36,7 @@ dataController.get('/evento/all', async (req, res) =>{
             res.status(500).json({
                 status: 'error',
                 message: 'Internal server error',
-            })
+            });
         } else {
             client.release();
             res.send(result.rows);
