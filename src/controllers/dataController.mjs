@@ -1,5 +1,5 @@
-import { connect } from '../db/dbConnect'
-import { getDateHoje } from '../utils/getDate';
+import { connect } from '../db/dbConnect.mjs'
+import { getDateHoje } from '../utils/getDate.mjs';
 
 import { Router } from 'express';
 

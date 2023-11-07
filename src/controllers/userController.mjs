@@ -1,5 +1,5 @@
-import connect from '../db/dbConnect'
-import { ensureUserExists } from '../middlewares/ensureUserExists';
+import { connect } from '../db/dbConnect.mjs'
+import { ensureUserExists } from '../middlewares/ensureUserExists.ts';
 
 import { Router } from 'express';
 

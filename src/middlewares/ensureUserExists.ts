@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import {connect} from '../db/dbConnect';
+import {connect} from '../db/dbConnect.mjs';
 
-export const ensureUserExists (req : Request, res : Response, next : NextFunction) => {
+export const ensureUserExists = async (req : Request, res : Response, next : NextFunction) => {
     const client = await connect();
     const {nome} = req.body
 
@@ -13,6 +13,6 @@ export const ensureUserExists (req : Request, res : Response, next : NextFunctio
         return next();
     } else {
         client.release();  
-        return res.staus(401).json('Usuário não encontrado');
+        return res.status(401).json('Usuário não encontrado');
     }
 }

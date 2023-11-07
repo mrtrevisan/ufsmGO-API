@@ -1,13 +1,13 @@
 //access to .env file
-import {dotenv} from 'dotenv';
+import dotenv from 'dotenv';
 dotenv.config();
 
 //express server
-import {express} from 'express';
+import express from 'express';
 const app = express();
 
 //cors policy 
-import {cors} from 'cors';
+import cors from 'cors';
 app.use(cors());
 
 app.use(function (req, res, next) {
@@ -22,9 +22,9 @@ app.use(function (req, res, next) {
 app.use(express.json());
 app.use(express.urlencoded({extended : true}));
 
-import { authController } from './controllers/authController';
-import { userController } from './controllers/userController';
-import { dataController } from './controllers/dataController';
+import { authController } from './controllers/authController.mjs';
+import { userController } from './controllers/userController.mjs';
+import { dataController } from './controllers/dataController.mjs';
 
 app.use('/', authController);
 app.use('/', userController);

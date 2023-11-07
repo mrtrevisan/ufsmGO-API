@@ -21,8 +21,8 @@ RUN apk update && apk add --no-cache \
 COPY --chown=node:node --from=installer /app/node_modules ./node_modules
 # Bundle app source
 COPY --chown=node:node . .
-RUN chmod -R 755 /app/init_container \
+RUN chmod -R 755 /app/script \
     && chown node:node /app
 USER node
 #CMD [ "yarn", "server" ]
-ENTRYPOINT ["/app/init_container/startup.sh"]
+ENTRYPOINT ["/app/script/startup.sh"]
