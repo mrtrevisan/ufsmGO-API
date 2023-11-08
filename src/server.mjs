@@ -22,6 +22,14 @@ app.use(function (req, res, next) {
 app.use(express.json());
 app.use(express.urlencoded({extended : true}));
 
+//swagger
+import swaggerUi from 'swagger-ui-express';
+import fs from 'fs';
+const swaggerFile = fs.readFileSync('./src/swagger/swagger.json')
+
+app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(JSON.parse(swaggerFile)));
+
+//endpoint controllers
 import { authController } from './controllers/authController.mjs';
 import { userController } from './controllers/userController.mjs';
 import { dataController } from './controllers/dataController.mjs';
