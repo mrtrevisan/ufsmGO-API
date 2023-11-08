@@ -4,7 +4,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "server": "node src/swagger/swagger.mjs && ts-node --esm src/server.mjs"
+    "server": "node src/swagger/swagger.js && ts-node --esm src/server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
