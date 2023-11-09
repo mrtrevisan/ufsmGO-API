@@ -70,6 +70,7 @@ userController.post('/player', ensureNameNotUsed, async (req, res) => {
     
 })
 
+//delete user
 userController.delete('/player', ensureUserExists, async (req, res) => {
     var client = await connect();
     var {nome, senha} = req.body
@@ -100,7 +101,7 @@ userController.delete('/player', ensureUserExists, async (req, res) => {
     }
 })
 
-
+//update user points
 userController.put('/player/pontos', ensureUserExists, async (req, res) => {
     var client = await connect();
     var {nome, pontos} = req.body
