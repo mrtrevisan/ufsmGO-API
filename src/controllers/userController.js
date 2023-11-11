@@ -2,6 +2,9 @@ import { connect } from '../db/dbConnect.js'
 import { ensureUserExists } from '../middlewares/ensureUserExists.ts';
 import { ensureNameNotUsed } from '../middlewares/ensureNameNotUsed.ts';
 
+import bcrypt from 'bcryptjs';
+const { hash, compare } = bcrypt;
+
 import { Router } from 'express';
 
 const userController = Router();
@@ -53,7 +56,9 @@ userController.post('/player', ensureNameNotUsed, async (req, res) => {
     const client = await connect();
     const {nome, senha} = req.body;
 
-    const query = "INSERT INTO player (nome, senha, pontos) VALUES ('" + nome + "', '" + senha + "', 0)";
+    const senhaHash = await hash(senha, 5);
+
+    const query = "INSERT INTO player (nome, senha, pontos) VALUES ('" + nome + "', '" + senhaHash + "', 0)";
     client.query(query, (err, result) => {
         if(err) {
             console.error('error running query', err);
@@ -64,7 +69,7 @@ userController.post('/player', ensureNameNotUsed, async (req, res) => {
             });
         } else {
             client.release();  
-            res.status(200).json('Post request: new player, nome = ' + nome + ', senha = ' + senha);
+            res.status(200).json('Post request: new player, nome = ' + nome + ', hash = ' + senhaHash);
         }
     })
     
@@ -79,7 +84,7 @@ userController.delete('/player', ensureUserExists, async (req, res) => {
     const { rows } = await client.query(query);
 
     // verifica se a senha está correta
-    const passwordMatch = (senha === rows[0].senha);
+    const passwordMatch = await compare(senha, rows[0].senha);
 
     if (passwordMatch) {
         var query2 = "DELETE FROM player WHERE nome like '" + nome + "'";

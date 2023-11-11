@@ -39,7 +39,7 @@ dataController.get('/evento/all', async (req, res) =>{
             });
         } else {
             client.release();
-            res.send(result.rows);
+            res.status(200).send(result.rows);
         }
     })
 })
@@ -74,7 +74,7 @@ dataController.get('/evento', async (req, res) =>{
             })
         } else {
             client.release();
-            res.send(result.rows);
+            res.status(200).send(result.rows);
         }
     })
 })
@@ -94,7 +94,7 @@ dataController.get('/centro/all', async function(req, res){
             })
         } else {
             client.release();
-            res.send(result.rows);
+            res.status(200).send(result.rows);
         }
     })
 })
@@ -115,7 +115,7 @@ dataController.get('/centro/:index', async function(req, res){
             })
         } else {
             client.release();
-            res.send(result.rows);
+            res.status(200).send(result.rows);
         }
     })
 })
@@ -135,7 +135,7 @@ dataController.get('/leaderboard', async function(req, res){
             })
         } else {
             client.release();
-            res.send(result.rows);
+            res.status(200).send(result.rows);
         }
     })
 })

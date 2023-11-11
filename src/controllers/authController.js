@@ -1,6 +1,9 @@
 import { connect } from '../db/dbConnect.js'
 import { ensureUserExists } from '../middlewares/ensureUserExists.ts';
 
+import bcrypt from 'bcryptjs';
+const { compare } = bcrypt;
+
 import { Router } from 'express';
 
 const authController = Router();
@@ -14,7 +17,7 @@ authController.post('/login', ensureUserExists, async (req, res) => {
     const { rows } = await client.query(query);
     
     // verifica se a senha está correta
-    const passwordMatch = (senha === rows[0].senha);
+    const passwordMatch = await compare(senha, rows[0].senha);
 
     if (!passwordMatch) {
         res.status(401).json({

@@ -13,6 +13,6 @@ export const ensureUserExists = async (req : Request, res : Response, next : Nex
         return next();
     } else {
         client.release();  
-        return res.status(401).json('Usuário não encontrado');
+        return res.status(400).json('Usuário não encontrado');
     }
 }
