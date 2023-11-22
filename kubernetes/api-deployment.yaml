@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ufsmgo-api-deployment
+  namespace: ufsmgo
+spec:
+  selector:
+    matchLabels:
+      app: ufsmgo-api
+  template:
+    metadata:
+      labels:
+        app: ufsmgo-api
+    spec:
+      containers:
+      - name: ufsmgo-api-container
+        image: mrtrevisan/ufsmgo-api:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 3000
+        envFrom:
+          - configMapRef:
+              name: ufsmgo-api-configmap
+          - secretRef:
+              name: ufsmgo-api-secret
+        env:
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: ufsmgo-postgres-secret
+                key: username
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: ufsmgo-postgres-secret
+                key: password
+

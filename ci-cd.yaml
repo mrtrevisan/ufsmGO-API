@@ -1,0 +1,55 @@
+# .github/workflows/ci-cd.yaml
+name: CI/CD
+
+on: push
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      - name: Build and push the Docker image
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: |
+            mrtrevisan/ufsmgo-api:latest
+            mrtrevisan/ufsmgo-api:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+      name: Deploy
+      if: github.ref == 'refs/heads/develop'
+      needs: [ build ]
+      runs-on: ubuntu-latest
+      steps:
+        - name: Set the Kubernetes context
+          uses: azure/k8s-set-context@v2
+          with:
+            method: service-account
+            k8s-url: https://20.85.210.203:6443
+            k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
+
+        - name: Checkout source code
+          uses: actions/checkout@v3
+
+        - name: Deploy to the Kubernetes cluster
+          uses: azure/k8s-deploy@v1
+          with:
+            namespace: default
+            manifests: |
+              kubernetes/api-deployment.yaml
+              kubernetes/api-ingress.yaml
+              kubernetes/api-service.yaml
+            images: |
+              mrtrevisan/ufsmgo-api:${{ github.sha }}

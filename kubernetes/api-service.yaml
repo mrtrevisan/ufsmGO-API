@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: ufsmgo-api-service
+  namespace: ufsmgo
+spec:
+  selector:
+    app: ufsmgo-api
+  type: NodePort
+  ports:
+  - name: api
+    port: 3000
