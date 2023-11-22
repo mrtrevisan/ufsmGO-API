@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 //swagger
 import swaggerAutogen from 'swagger-autogen'
 
