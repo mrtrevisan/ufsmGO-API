@@ -4,9 +4,6 @@ dotenv.config();
 //swagger
 import swaggerAutogen from 'swagger-autogen'
 
-import dotenv from 'dotenv';
-dotenv.config();
-
 const outputFile = './swagger.json'
 const endpointsFiles = [
     '../controllers/authController.js', 
