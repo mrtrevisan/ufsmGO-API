@@ -1,7 +1,11 @@
 # .github/workflows/ci-cd.yaml
 name: CI/CD
 
-on: push
+on:
+  push:
+    branches:
+      - main
+      - 'releases/**'
 
 jobs:
   build:
