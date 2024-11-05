@@ -9,7 +9,8 @@ async function connect(){
             user: process.env.DATABASE_USER,
             database: process.env.DATABASE_DB,
             password: process.env.DATABASE_PASSWORD,
-            port: process.env.DATABASE_PORT
+            port: process.env.DATABASE_PORT,
+            ssl:true
         });
         global.connection = pool
         return pool.connect()

@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   ufsmgo-api:
     #image: mrtrevisan/ufsmgo-api:latest
