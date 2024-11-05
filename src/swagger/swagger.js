@@ -9,8 +9,8 @@ const endpointsFiles = [
     '../controllers/authController.js', 
     '../controllers/dataController.js',
     '../controllers/userController.js', 
-    '../middlewares/ensureNameNotUsed.ts', 
-    '../middlewares/ensureUserExists.ts',
+    '../middlewares/ensureNameNotUsed.js', 
+    '../middlewares/ensureUserExists.js',
     '../server.js'
 ]
 

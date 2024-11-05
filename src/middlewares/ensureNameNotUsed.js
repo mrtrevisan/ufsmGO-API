@@ -1,4 +1,3 @@
-import { NextFunction, Request, Response } from 'express';
 import {connect} from '../db/dbConnect.js';
 
 export const ensureNameNotUsed = async (req, res, next) => {
