@@ -1,6 +1,6 @@
 import { connect } from '../db/dbConnect.js'
-import { ensureUserExists } from '../middlewares/ensureUserExists.ts';
-import { ensureNameNotUsed } from '../middlewares/ensureNameNotUsed.ts';
+import { ensureUserExists } from '../middlewares/ensureUserExists.js';
+import { ensureNameNotUsed } from '../middlewares/ensureNameNotUsed.js';
 
 import bcrypt from 'bcryptjs';
 const { hash, compare } = bcrypt;
