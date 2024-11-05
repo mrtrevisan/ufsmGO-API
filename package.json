@@ -4,7 +4,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "server": "node src/swagger/swagger.js && ts-node --esm src/server.js"
+    "server": "node src/swagger/swagger.js && node src/server.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
