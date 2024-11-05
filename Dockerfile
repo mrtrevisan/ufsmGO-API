@@ -8,14 +8,17 @@ RUN yarn
 
 FROM node:18-alpine
 WORKDIR /app
-RUN apk update && apk add --no-cache \
-        python3 \
-        py3-pip \
-        less groff \
-        jq \
-    && pip3 install --upgrade pip \
-    && pip3 install --no-cache-dir \
-        awscli \
+# RUN apk update && apk add --no-cache \
+#         python3 \
+#         py3-pip \
+#         less groff \
+#         jq \
+#     && pip3 install --upgrade pip \
+#     && pip3 install --no-cache-dir \
+#         awscli \
+#     && rm -rf /var/cache/apk/*
+
+RUN apk update && apk upgrade \
     && rm -rf /var/cache/apk/*
 
 COPY --chown=node:node --from=installer /app/node_modules ./node_modules
