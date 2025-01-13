@@ -4,6 +4,7 @@ yarn-error.log
 Dockerfile
 docker-compose-traefik.yml
 docker-compose.yml
+.dockerignore
 variables.env
 azure-pipelines.yml
 README.md

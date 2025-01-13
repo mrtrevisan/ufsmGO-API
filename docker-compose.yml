@@ -7,10 +7,6 @@ services:
     container_name: ufsmgo-api
     restart: always
     env_file: .env
-    #environment:
-    #  HOST_DB: $HOST_DB
-    #ports:
-    #  - "15432:5432"
     networks:
       - traefik-proxy
     labels:

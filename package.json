@@ -4,7 +4,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "server": "node src/swagger/swagger.js && node src/server.js"
+    "doc-gen": "node src/swagger/swagger.js",
+    "server": "node src/server.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -14,11 +15,5 @@
     "pg": "^8.11.3",
     "swagger-autogen": "^2.23.7",
     "swagger-ui-express": "^5.0.0"
-  },
-  "devDependencies": {
-    "@types/express": "^4.17.21",
-    "@types/node": "^20.9.0",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.2.2"
   }
 }
